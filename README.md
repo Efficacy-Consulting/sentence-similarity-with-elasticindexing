@@ -39,7 +39,7 @@ delete.topic.enable=true
 ```
 
 ## Usage
-1. From VS Code, select Python Interpreter (`command+shift+p`) and choose `Python 3.7.6 64-bit ('tensorflow_env':conda)` (this is specific on my machine)
+1. From VS Code, select **Python Interpreter** (`command+shift+p`) and choose `Python 3.7.6 64-bit ('tensorflow_env':conda)` (this is specific on my machine)
 
     - also activate tensorflow_env in the terminal also: `conda activate tensorflow_env`
 

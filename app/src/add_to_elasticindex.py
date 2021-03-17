@@ -74,6 +74,7 @@ def create_index(params, data_frame, content_index):
   use_model = default_use_model
   stop_words = default_stop_words
   batch_size = default_batch_size
+  elasticindex_name = default_elasticindex_name
 
   try:
     es = get_es_instance()
@@ -84,8 +85,11 @@ def create_index(params, data_frame, content_index):
       stop_words = params.get('stop_words')
     if params.get('batch_size'):
       batch_size = params.get('batch_size')
+    if params.get('elasticindex_name'):
+      batch_size = params.get('elasticindex_name')
 
     start_time = time.time()
+    print('USE model name', use_model)
     embed_func = hub.Module(use_model)
     end_time = time.time()
     print_with_time('Load the module: {}'.format(end_time-start_time))
@@ -103,7 +107,7 @@ def create_index(params, data_frame, content_index):
     print_with_time('Read Data Time: {}'.format(end_time - start_time))
 
     start_time = time.time()
-    add_to_es_index(es, embedding,
+    add_to_es_index(es, elasticindex_name, embedding,
                     batch_size, sentences,
                     content_array, stop_words, content_index)
     end_time = time.time()
@@ -113,7 +117,7 @@ def create_index(params, data_frame, content_index):
     raise
 
 
-def add_to_es_index(es, embedding_fun, batch_size, sentences, content_array, stop_words, content_index):
+def add_to_es_index(es, elasticindex_name, embedding_fun, batch_size, sentences, content_array, stop_words, content_index):
     batch_sentences = []
     batch_indexes = []
     batch_ids = []
@@ -227,7 +231,7 @@ def add_new_document_to_es(payload):
     raise
 
 
-def start_indexing(param):
+def start_indexing(params):
   result = {}
   data_source = default_csv_file_path
   data_columns = g_columns

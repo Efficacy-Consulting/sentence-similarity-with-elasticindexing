@@ -6,6 +6,11 @@ from json import JSONEncoder
 
 from app.src.add_to_elasticindex import start_indexing
 
+app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+app.config['DEBUG'] = True
+
 @app.route('/', methods=['GET'])
 def home():
   return '<h1>Sentense Analysis</h1><p>Simple sentense analysis.</p>'
@@ -30,3 +35,6 @@ def start_sentence_indexing():
   params = request.get_json()
   result = start_indexing(params)
   return json.dumps(result)
+
+  if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=1975, debug=True)
