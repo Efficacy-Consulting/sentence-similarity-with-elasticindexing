@@ -86,7 +86,7 @@ def create_index(params, data_frame, content_index):
     if params.get('batch_size'):
       batch_size = params.get('batch_size')
     if params.get('elasticindex_name'):
-      batch_size = params.get('elasticindex_name')
+      elasticindex_name = params.get('elasticindex_name')
 
     start_time = time.time()
     print('USE model name', use_model)
@@ -183,18 +183,22 @@ def add_to_es_index(es, elasticindex_name, embedding_fun, batch_size, sentences,
                 res = es.index(index=elasticindex_name, body=sentence_dict)
 
 
-def add_new_document_to_es(payload):
+def add_new_document_to_es(params, payload):
   use_model = default_use_model
   stop_words = default_stop_words
   batch_size = default_batch_size
+  elasticindex_name = default_elasticindex_name
   try:
     es = get_es_instance()
+
     if params.get('use_model'):
       use_model = params.get('use_model')
     if params.get('stop_words'):
       stop_words = params.get('stop_words')
     if params.get('batch_size'):
       batch_size = params.get('batch_size')
+    if params.get('elasticindex_name'):
+      elasticindex_name = params.get('elasticindex_name')
 
     start_time = time.time()
     embed_func = hub.Module(use_model)
@@ -216,8 +220,11 @@ def add_new_document_to_es(payload):
       context_embed = sess.run(embedding, feed_dict={
           sentences: batch_sentences})
 
+    id = payload['id']
+    if not id:
+      id = int(round(time.time() * 1000))
     sentence_dict = {
-        'id':  payload['id'],
+        'id':  id,
         'title':  payload['title'],
         'publication':  payload['publication'],
         'sentence': payload['sentence'],
