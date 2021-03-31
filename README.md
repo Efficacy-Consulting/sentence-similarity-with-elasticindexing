@@ -50,12 +50,12 @@ delete.topic.enable=true
 
   - start zookeeper
     ```
-    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh config/zookeeper.properties
+    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/zookeeper.properties
     ```
 
   - start kafka
     ```
-    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/kafka-server-start.sh config/server.properties
+    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/kafka-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/server.properties
     ```
       - to stop kafka
         ```
@@ -66,8 +66,20 @@ delete.topic.enable=true
         rm -rf /tmp/kafka-logs /tmp/zookeeper
         ```
 
-3. Enter the following command in the terminal
+3. To run the flask server
 ```
-python ./app/src/sentence-similarity-es.py
+a. Menu --> Run --> Run Without Debugging
+            (or)
+b. Menu --> Run --> Start Debugging
 ```
-4. Get Elasticvue chrome plugin and go to _`INDICES`_ and choose `sentence-similarity` from there, use `./app/src/queries.json` to use as custom query
+
+4. Open another terminal and run 
+```
+a. export PYTHONPATH="${PYTHONPATH}:app/src/"
+b. Start python app/src/document_consumer.py
+c. Start Indexing (./start_indexing.sh)
+d. Add new document to queue (./add_new_document_sync.sh)
+e. Add new document in Sync mode (./add_new_document_sync.sh)
+```
+
+5. Get Elasticvue chrome plugin and go to _`INDICES`_ and choose `sentence-similarity` from there, use `./app/src/queries.json` to use as custom query

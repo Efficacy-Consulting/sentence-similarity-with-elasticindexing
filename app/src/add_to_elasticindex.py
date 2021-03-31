@@ -13,23 +13,7 @@ import pandas as pd
 import numpy as np
 
 from elasticsearch import Elasticsearch
-from app.src.similarity_utils import print_with_time
-
-# globals
-default_use_model = 'https://tfhub.dev/google/universal-sentence-encoder-large/3?tf-hub-format=compressed'
-default_csv_file_path = './data/articles_small.csv'
-
-default_batch_size = 10
-default_stop_words = False
-default_vector_size = 512
-default_elasticindex_name = 'sentence_similarity'
-default_elastic_server = 'http://elastic:Elastic123@localhost:9200/'
-
-# for new articles (articles1.csv)
-g_columns = ['id', 'title', 'publication', 'content']
-g_id_index = 0
-g_content_index = 3
-g_content_key = 'content'
+from app.src.similarity_utils import *
 
 def get_es_instance():
     mapping = {
