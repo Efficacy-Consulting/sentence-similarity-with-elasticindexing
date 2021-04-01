@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Settings
 ## Elasticsearch
-Added to `~softwares_and_tools/elasticsearch-7.10.1/config/elasticsearch.yml` inorder to avoid the following ES exception
+Added to `~softwares_and_tools/elasticsearch-7.12.0/config/elasticsearch.yml` inorder to avoid the following ES exception
 
 _Elasticsearch exception [type=cluster_block_exception, reason=index [myindex] blocked by: [TOO_MANY_REQUESTS/12/index read-only / allow delete (api)];]_
 ```
