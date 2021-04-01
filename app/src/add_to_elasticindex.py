@@ -48,7 +48,8 @@ def create_index(params, data_frame, content_index):
       elasticindex_name = params.get('elasticindex_name')
 
     es = get_es_instance()
-    add_index_mapping(es, elasticindex_name)
+    if not es_conn.indices.exists(elasticindex_name):
+        add_index_mapping(es, elasticindex_name)
 
     start_time = time.time()
     print('USE model name', use_model)
