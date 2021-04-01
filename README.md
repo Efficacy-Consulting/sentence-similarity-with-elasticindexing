@@ -26,6 +26,14 @@ cluster.routing.allocation.disk.watermark.low: 500mb
 cluster.routing.allocation.disk.watermark.high: 300mb
 ```
 
+To set password
+```
+1. xpack.security.enabled: true
+2. Start elasticsearch - ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch
+3. Run this command in another terminal ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch-setup-passwords interactive
+4. Stop and start elastic search
+```
+
 ## Kafka
 Checkout [Kafka Quickstart Guide](https://kafka.apache.org/quickstart)
 1. Open the port
@@ -39,23 +47,23 @@ delete.topic.enable=true
 ```
 
 ## Usage
-1. From VS Code, select Python Interpreter (`command+shift+p`) and choose `Python 3.7.6 64-bit ('tensorflow_env':conda)` (this is specific on my machine)
+1. From VS Code, select **Python Interpreter** (`command+shift+p`) and choose `Python 3.7.6 64-bit ('tensorflow_env':conda)` (this is specific on my machine)
 
     - also activate tensorflow_env in the terminal also: `conda activate tensorflow_env`
 
 2. Start `elasticsearch` instance
 ```
-~/softwares_and_tools/elasticsearch-7.10.1/bin/elasticsearch
+~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch
 ```
 
   - start zookeeper
     ```
-    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh config/zookeeper.properties
+    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/zookeeper.properties
     ```
 
   - start kafka
     ```
-    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/kafka-server-start.sh config/server.properties
+    ~/softwares_and_tools/kafka_2.13-2.7.0/bin/kafka-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/server.properties
     ```
       - to stop kafka
         ```
@@ -66,8 +74,20 @@ delete.topic.enable=true
         rm -rf /tmp/kafka-logs /tmp/zookeeper
         ```
 
-3. Enter the following command in the terminal
+3. To run the flask server
 ```
-python ./app/src/sentence-similarity-es.py
+a. Menu --> Run --> Run Without Debugging
+            (or)
+b. Menu --> Run --> Start Debugging
 ```
-4. Get Elasticvue chrome plugin and go to _`INDICES`_ and choose `sentence-similarity` from there, use `./app/src/queries.json` to use as custom query
+
+4. Open another terminal and run 
+```
+a. export PYTHONPATH="${PYTHONPATH}:app/src/"
+b. Start python app/src/document_consumer.py
+c. Start Indexing (./start_indexing.sh)
+d. Add new document to queue (./add_new_document_sync.sh)
+e. Add new document in Sync mode (./add_new_document_sync.sh)
+```
+
+5. Get Elasticvue chrome plugin and go to _`INDICES`_ and choose `sentence-similarity` from there, use `./app/src/queries.json` to use as custom query
