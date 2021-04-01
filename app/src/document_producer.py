@@ -6,8 +6,15 @@ import json
 from app.src.similarity_utils import *
 
 def push_document_to_queue(params, payload):
+  result = {}
   bootstrap_servers = default_bootstrap_servers
   elasticindex_name = default_elasticindex_name
+
+  if payload is None or bool(payload):
+    result = {
+      'error': 'Invalid argument - payload'
+    }
+    return result
 
   try:
     if params.get('bootstrap_servers'):
@@ -31,6 +38,11 @@ def push_document_to_queue(params, payload):
     print_with_time('Push to queue the module: {}'.format(end_time-start_time))
 
   except Exception as e:
-    raise
+    print('Exception in push_document_to_queue: {0}'.format(e))
+    result = {
+      'error': 'Exception in push_document_to_queue: {0}'.format(e)
+    }
   finally:
     producer.close()
+  
+  return result

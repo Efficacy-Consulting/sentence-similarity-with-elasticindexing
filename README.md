@@ -26,6 +26,14 @@ cluster.routing.allocation.disk.watermark.low: 500mb
 cluster.routing.allocation.disk.watermark.high: 300mb
 ```
 
+To set password
+```
+1. xpack.security.enabled: true
+2. Start elasticsearch - ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch
+3. Run this command in another terminal ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch-setup-passwords interactive
+4. Stop and start elastic search
+```
+
 ## Kafka
 Checkout [Kafka Quickstart Guide](https://kafka.apache.org/quickstart)
 1. Open the port
@@ -45,7 +53,7 @@ delete.topic.enable=true
 
 2. Start `elasticsearch` instance
 ```
-~/softwares_and_tools/elasticsearch-7.10.1/bin/elasticsearch
+~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch
 ```
 
   - start zookeeper
