@@ -88,7 +88,8 @@ def add_to_es_index(es, elasticindex_name, embedding_fun, batch_size, sentences,
     batch_contents = []
     batch_indexes = []
     batch_ids = []
-    batch_entities = []
+    batch_titles = []
+    batch_publications = []
     last_indexed = 0
     num_batches = 0
     content = ''
@@ -106,8 +107,11 @@ def add_to_es_index(es, elasticindex_name, embedding_fun, batch_size, sentences,
             # id
             batch_ids.append(row[0])
 
-            # entities
-            batch_entities.append(row[2])
+            # titles
+            batch_titles.append(row[1])
+
+            # publications
+            batch_publications.append(row[2])
 
             if len(batch_contents) == batch_size:
                 context_embed = sess.run(embedding_fun, feed_dict={
@@ -115,10 +119,11 @@ def add_to_es_index(es, elasticindex_name, embedding_fun, batch_size, sentences,
 
                 for index in batch_indexes:
                     document_dict = {
-                        'ID':  batch_ids[index - last_indexed],
-                        'CONTENT': batch_contents[index - last_indexed],
-                        'ENTITY':  batch_entities[index - last_indexed],
-                        'EMBEDDING': context_embed[index - last_indexed]
+                        'id':  batch_ids[index - last_indexed],
+                        'title': batch_titles[index - last_indexed],
+                        'publication': batch_publications[index - last_indexed],
+                        'content':  batch_contents[index - last_indexed],
+                        'embedding': context_embed[index - last_indexed]
                     }
                     res = es.index(index=elasticindex_name, body=document_dict)
 
@@ -136,10 +141,11 @@ def add_to_es_index(es, elasticindex_name, embedding_fun, batch_size, sentences,
                 sentences: batch_contents})
             for index in batch_indexes:
                 document_dict = {
-                    'ID':  batch_ids[index - last_indexed],
-                    'CONTENT': batch_contents[index - last_indexed],
-                    'ENTITY':  batch_entities[index - last_indexed],
-                    'EMBEDDING': context_embed[index - last_indexed]
+                    'id':  batch_ids[index - last_indexed],
+                    'title': batch_titles[index - last_indexed],
+                    'publication': batch_publications[index - last_indexed],
+                    'content':  batch_contents[index - last_indexed],
+                    'embedding': context_embed[index - last_indexed]
                 }
                 res = es.index(index=elasticindex_name, body=document_dict)
 
@@ -173,6 +179,7 @@ def add_new_document_to_es(params, payload):
 
         start_time = time.time()
         batch_contents = []
+        print(payload)
         batch_contents.append(payload['content'])
         with tf.compat.v1.Session() as sess:
             sess.run([tf.compat.v1.global_variables_initializer(),
@@ -184,9 +191,10 @@ def add_new_document_to_es(params, payload):
         if not id:
             id = int(round(time.time() * 1000))
         sentence_dict = {
-            'id':  id,
-            'content':  payload['content'],
-            'entity':  payload['entity'],
+            'id': id,
+            'title': payload['title'],
+            'publication': payload['publication'],
+            'content': payload['content'],
             'embedding': context_embed[0]
         }
         res = es.index(index=elasticindex_name, body=sentence_dict)

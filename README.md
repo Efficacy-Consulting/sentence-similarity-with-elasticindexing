@@ -1,5 +1,5 @@
 # sentence-similarity-with-elasticindexing
-Short wikipedia articles lookup using Google's USE (Universal Sentence Encoder) and Elastic Indexing
+Short news articles lookup using Google's USE (Universal Sentence Encoder) and Elastic Indexing
 
 ## Installation
 
@@ -10,9 +10,9 @@ cd sentence-similarity-with-elasticindexing/
 ```
 
 ## Run the application
-1. Start `elasticsearch` instance (refer Usage section below)
-2. Start zookeeper (refer Usage section below)
-3. Start Kafka (refer Usage section below)
+1. Start `elasticsearch` instance (refer Usage section below) - `~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch`
+2. Start `zookeeper` (refer Usage section below) - `~/softwares_and_tools/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/zookeeper.properties`
+3. Start `Kafka` (refer Usage section below) - `~/softwares_and_tools/kafka_2.13-2.7.0/bin/kafka-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/server.properties`
 4. To run the flask server
 
     `a. Menu --> Run --> Run Without Debugging`
@@ -29,11 +29,17 @@ cd sentence-similarity-with-elasticindexing/
 
     * For any subsequent document addition, use kafka stream
 
-      * Start a kafka consumer - `python app/src/document_consumer.py`
+      * Make sure you are in the right conda environment, otherwise run `conda activate tensorflow_env`
+
+      * Start a kafka consumer
+      
+        `export PYTHONPATH="${PYTHONPATH}:app/src/"`
+
+        `python app/src/document_consumer.py`
 
       * Run `./add_new_document.sh` to add new document using kafka producer
 
-6. Finally, get `Elasticvue` chrome plugin and go to _`INDICES`_ and choose `small_wiki` from there, use `./app/src/queries.json` to use as custom query
+6. Finally, get `Elasticvue` chrome plugin and go to _`INDICES`_ and choose `articles_small` from there, use `./app/src/queries.json` to use as custom query
 
 <hr>
 

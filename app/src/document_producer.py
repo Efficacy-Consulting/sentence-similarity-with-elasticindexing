@@ -10,7 +10,7 @@ def push_document_to_queue(params, payload):
   bootstrap_servers = default_bootstrap_servers
   elasticindex_name = default_elasticindex_name
 
-  if payload is None or bool(payload):
+  if payload is None or not bool(payload):
     result = {
       'error': 'Invalid argument - payload'
     }

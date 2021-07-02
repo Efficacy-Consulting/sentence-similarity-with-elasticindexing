@@ -91,9 +91,9 @@ def get_recommended_documents(params, content):
         }
       },
       "_source": [
-        "ID",
-        "ENTITY",
-        "CONTENT"
+        "id",
+        "title",
+        "content"
       ]
     }
 
@@ -109,12 +109,12 @@ def get_recommended_documents(params, content):
       for hit in result["hits"]["hits"]:
         if hit['_score'] > thresh and len(data) <= top_n:
           # print("--\nscore: {} \n question: {} \n answer: {}\n--".format(hit["_score"], hit["_source"]['question'], hit["_source"]['answer']))
-          q_ids.append(hit['_source']['ID'])
+          q_ids.append(hit['_source']['id'])
           data.append(
             { 
-              'ID': hit["_source"]['ID'],
-              'CONTENT': hit["_source"]['CONTENT'],
-              'ENTITY': hit["_source"]['ENTITY'],
+              'id': hit["_source"]['id'],
+              'title': hit["_source"]['title'],
+              'content': hit["_source"]['content'],
             })
 
     result = {

@@ -28,7 +28,7 @@ def start_sentence_indexing():
     stop_words: optional: boolean (default: False),
     batch_size: optional: Numeric (default: 32),
     elastic_server: 'optional: location for the elastic' (default: localhost@9200)
-    elasticindex_name: 'optional: name for elastic indexing' (default: small_wiki),
+    elasticindex_name: 'optional: name for elastic indexing' (default: articles_small),
     
   }
   :return: success - result object with success message, 
@@ -55,7 +55,7 @@ def add_document():
     vector_size: 'optional: size-of-the-vector' (default: 512),
     stop_words: optional: boolean (default: False),
     elastic_server: 'optional: location for the elastic' (default: localhost@9200)
-    elasticindex_name: 'optional: name for elastic indexing' (default: small_wiki),
+    elasticindex_name: 'optional: name for elastic indexing' (default: articles_small),
     bootstrap_servers: 'optional: list of bootstrap servers
   }
   :return: success - result object with success message, 
@@ -72,7 +72,7 @@ def get_recommendations():
     content: 'required: column names of the data source',
     use_model: 'required: googles-tfhub-model-url',
     elastic_server: 'optional: location for the elastic' (default: localhost@9200),
-    elasticindex_name: 'optional: name for elastic indexing' (default: small_wiki)
+    elasticindex_name: 'optional: name for elastic indexing' (default: articles_small)
   }
   :return: success - result object with success message, 
             failure - result object with error message
@@ -94,7 +94,7 @@ def add_document_sync():
     vector_size: 'optional: size-of-the-vector' (default: 512),
     stop_words: optional: boolean (default: False),
     elastic_server: 'optional: location for the elastic' (default: localhost@9200)
-    elasticindex_name: 'optional: name for elastic indexing' (default: small_wiki)
+    elasticindex_name: 'optional: name for elastic indexing' (default: articles_small)
   }
   :return: success - result object with success message, 
             failure - result object with error message
