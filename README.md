@@ -9,42 +9,33 @@ git clone https://github.com/Efficacy-Consulting/sentence-similarity-with-elasti
 cd sentence-similarity-with-elasticindexing/
 ```
 
-### Install the required libs
-```
-pip install -r requirements.txt
-```
+## Run the application
+1. Start `elasticsearch` instance (refer Usage section below)
+2. Start zookeeper (refer Usage section below)
+3. Start Kafka (refer Usage section below)
+4. To run the flask server
 
-## Settings
-## Elasticsearch
-Added to `~softwares_and_tools/elasticsearch-7.12.0/config/elasticsearch.yml` inorder to avoid the following ES exception
+    `a. Menu --> Run --> Run Without Debugging`
 
-_Elasticsearch exception [type=cluster_block_exception, reason=index [myindex] blocked by: [TOO_MANY_REQUESTS/12/index read-only / allow delete (api)];]_
-```
-cluster.routing.allocation.disk.threshold_enabled: true 
-cluster.routing.allocation.disk.watermark.flood_stage: 200mb
-cluster.routing.allocation.disk.watermark.low: 500mb 
-cluster.routing.allocation.disk.watermark.high: 300mb
-```
+    (or)
 
-To set password
-```
-1. xpack.security.enabled: true
-2. Start elasticsearch - ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch
-3. Run this command in another terminal ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch-setup-passwords interactive
-4. Stop and start elastic search
-```
+    `b. Menu --> Run --> Start Debugging`
 
-## Kafka
-Checkout [Kafka Quickstart Guide](https://kafka.apache.org/quickstart)
-1. Open the port
-```
-listeners=PLAINTEXT://:9092
-```
+5. Open another terminal and run
 
-2. Enable option to delete topic
-```
-delete.topic.enable=true
-```
+    * To store document embedding into Elasticsearch for the 1st time (need to perform this only one)
+
+      `./start_indexing.sh`
+
+    * For any subsequent document addition, use kafka stream
+
+      * Start a kafka consumer - `python app/src/document_consumer.py`
+
+      * Run `./add_new_document.sh` to add new document using kafka producer
+
+6. Finally, get `Elasticvue` chrome plugin and go to _`INDICES`_ and choose `small_wiki` from there, use `./app/src/queries.json` to use as custom query
+
+<hr>
 
 ## Usage
 1. From VS Code, select **Python Interpreter** (`command+shift+p`) and choose `Python 3.7.6 64-bit ('tensorflow_env':conda)` (this is specific on my machine)
@@ -74,20 +65,36 @@ delete.topic.enable=true
         rm -rf /tmp/kafka-logs /tmp/zookeeper
         ```
 
-3. To run the flask server
+<hr>
+
+## Settings
+### Elasticsearch
+Added to `~softwares_and_tools/elasticsearch-7.12.0/config/elasticsearch.yml` inorder to avoid the following ES exception
+
+_Elasticsearch exception [type=cluster_block_exception, reason=index [myindex] blocked by: [TOO_MANY_REQUESTS/12/index read-only / allow delete (api)];]_
 ```
-a. Menu --> Run --> Run Without Debugging
-            (or)
-b. Menu --> Run --> Start Debugging
+cluster.routing.allocation.disk.threshold_enabled: true 
+cluster.routing.allocation.disk.watermark.flood_stage: 200mb
+cluster.routing.allocation.disk.watermark.low: 500mb 
+cluster.routing.allocation.disk.watermark.high: 300mb
 ```
 
-4. Open another terminal and run 
+To set password
 ```
-a. export PYTHONPATH="${PYTHONPATH}:app/src/"
-b. Start python app/src/document_consumer.py
-c. Start Indexing (./start_indexing.sh)
-d. Add new document to queue (./add_new_document_sync.sh)
-e. Add new document in Sync mode (./add_new_document_sync.sh)
+1. xpack.security.enabled: true
+2. Start elasticsearch - ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch
+3. Run this command in another terminal ~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch-setup-passwords interactive
+4. Stop and start elastic search
 ```
 
-5. Get Elasticvue chrome plugin and go to _`INDICES`_ and choose `sentence-similarity` from there, use `./app/src/queries.json` to use as custom query
+### Kafka
+Checkout [Kafka Quickstart Guide](https://kafka.apache.org/quickstart)
+1. Open the port
+```
+listeners=PLAINTEXT://:9092
+```
+
+2. Enable option to delete topic
+```
+delete.topic.enable=true
+```
