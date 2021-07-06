@@ -47,8 +47,9 @@ def add_document():
   :param params: {
     payload: 'required: contains id, content and entity',
       id: 'optional: unique id for this document',
-      content: 'required: document content',
-      entity: 'required: document entity'
+      title: 'title of the news content',
+      publication: 'news publication,
+      content: 'required: news content'
 
     use_model: 'required: googles-tfhub-model-url',
     data_columns: 'optional: column names of the data source',
@@ -65,12 +66,12 @@ def add_document():
   result = push_document_to_queue(params, params.get('payload'))
   return json.dumps(result)
 
-@app.route('/get-recommendations', methods=['POST'])
+@app.route('/search', methods=['POST'])
 def get_recommendations():
-  """Add new document to the queue
+  """Get top 3 documents related to the search string
   :param params: {
     content: 'required: column names of the data source',
-    use_model: 'required: googles-tfhub-model-url',
+    use_model: 'optional: googles-tfhub-model-url',
     elastic_server: 'optional: location for the elastic' (default: localhost@9200),
     elasticindex_name: 'optional: name for elastic indexing' (default: articles_small)
   }
@@ -78,17 +79,18 @@ def get_recommendations():
             failure - result object with error message
   """
   params = request.get_json()
-  result = get_recommended_documents(params, params.get('content'))
+  result = get_recommended_documents(params, params.get('payload'))
   return json.dumps(result)
 
 @app.route('/add-document-sync', methods=['POST'])
 def add_document_sync():
-  """Add new document to ES
+  """Add new document to ES synchronously
   :param params: {
     payload: 'required: contains id, content and entity',
       id: 'optional: unique id for this document',
-      content: 'required: document content',
-      entity: 'required: document entity'
+      title: 'title of the news content',
+      publication: 'news publication,
+      content: 'required: news'
     use_model: 'required: googles-tfhub-model-url',
     data_columns: 'optional: column names of the data source',
     vector_size: 'optional: size-of-the-vector' (default: 512),

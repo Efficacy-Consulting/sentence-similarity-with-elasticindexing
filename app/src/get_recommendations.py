@@ -30,24 +30,31 @@ def get_es_instance():
 
   return elastic_client
 
-def get_recommended_documents(params, content):
+def get_recommended_documents(params, payload):
   result = {}
   use_model = default_use_model
   stop_words = default_stop_words
   batch_size = default_batch_size
   elasticindex_name = default_elasticindex_name
 
+  if payload is None or not bool(payload):
+    result = {
+      'error': 'Invalid argument - payload'
+    }
+    return result
+
+  content = payload.get('content')
+  if content is None:
+      result = {
+        'error': 'Invalid argument - content'
+      }
+      return result
+
   try:
     if params.get('use_model'):
       use_model = params.get('use_model')
     if params.get('elasticindex_name'):
       elasticindex_name = params.get('elasticindex_name')
-
-    if content is None:
-      result = {
-        'error': 'Invalid argument - content'
-      }
-      return result
 
     es = get_es_instance()
     if not es.indices.exists(elasticindex_name):
@@ -83,7 +90,7 @@ def get_recommended_documents(params, content):
             "match_all": {}
           },
           "script": {
-            "source": "(cosineSimilarity(params.query_vector, 'EMBEDDING') + 1.0)",
+            "source": "(cosineSimilarity(params.query_vector, doc['embedding']) + 1.0)",
             "params": {
               "query_vector": query_vec[0]
             }
@@ -94,13 +101,16 @@ def get_recommended_documents(params, content):
         "id",
         "title",
         "content"
-      ]
+      ],
+      "size": 3,
+      "from": 0,
+      "sort": []
     }
 
     result = es.search(index=elasticindex_name, body=script_query)
     total_match = len(result["hits"]["hits"])
     print("Total Matches: ", str(total_match))
-    # print(result)
+
     thresh = 1.2
     top_n = 10
     data = []
@@ -108,7 +118,6 @@ def get_recommended_documents(params, content):
       q_ids = []
       for hit in result["hits"]["hits"]:
         if hit['_score'] > thresh and len(data) <= top_n:
-          # print("--\nscore: {} \n question: {} \n answer: {}\n--".format(hit["_score"], hit["_source"]['question'], hit["_source"]['answer']))
           q_ids.append(hit['_source']['id'])
           data.append(
             { 
