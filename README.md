@@ -8,8 +8,26 @@ Short news articles lookup using Google's USE (Universal Sentence Encoder) and E
 git clone https://github.com/Efficacy-Consulting/sentence-similarity-with-elasticindexing.git
 cd sentence-similarity-with-elasticindexing/
 ```
+## Prerequisite
+1. VSCode - This project is developed using VSCode
+2. Install Anaconda
+3. Have the following packages installed
+  ```
+  pandas==0.25.3
+  Flask==1.1.1
+  Flask_Cors==3.0.8
+  elasticsearch==7.10.1
+  kafka_python==2.0.2
+  gensim==3.8.0
+  numpy==1.19.2
+  tensorflow==1.15.0
+  tensorflow_hub==0.7.0
+  kafka==1.3.5
+  utils==1.0.1
+  ```
 
 ## Run the application
+Note: I have all the software and tools installed/copied under `USERS/softwares_and_tools`
 1. Start `elasticsearch` instance (refer Usage section below) - `~/softwares_and_tools/elasticsearch-7.12.0/bin/elasticsearch`
 2. Start `zookeeper` (refer Usage section below) - `~/softwares_and_tools/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/zookeeper.properties`
 3. Start `Kafka` (refer Usage section below) - `~/softwares_and_tools/kafka_2.13-2.7.0/bin/kafka-server-start.sh ~/softwares_and_tools/kafka_2.13-2.7.0/config/server.properties`
