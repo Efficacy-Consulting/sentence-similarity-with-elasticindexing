@@ -12,7 +12,7 @@ generate_new_document()
     id: $id,
     title: $title,
     publication: $publication,
-    sentence: $sentence
+    content: $sentence
   }
 }
 EOF
