@@ -1,6 +1,6 @@
 pandas==0.25.3
 Flask==1.1.1
-Flask_Cors==3.0.8
+Flask_Cors==3.0.9
 elasticsearch==7.10.1
 kafka_python==2.0.2
 gensim==3.8.0
