@@ -148,12 +148,17 @@ def get_model_embedding(use_model):
     end_time = time.time()
     print_with_time('Init sentences embedding: {}'.format(end_time-start_time))
 
-    # with tf.compat.v1.Session() as sess:
-    #   sess.run([tf.compat.v1.global_variables_initializer(),
-    #             tf.compat.v1.tables_initializer()])
     g_session = tf.compat.v1.Session()
     g_session.run([tf.compat.v1.global_variables_initializer(),
                 tf.compat.v1.tables_initializer()])
 
   return [g_embedding, g_sentences, g_session]
 
+def close_session():
+  global g_session
+  if g_session is not None:
+    g_session.close()
+
+  return {
+      'status': 'Successfully closed the session'
+    }

@@ -6,7 +6,7 @@ from json import JSONEncoder
 
 from app.src.add_to_elasticindex import start_indexing, add_new_document_to_es
 from app.src.document_producer import push_document_to_queue
-from app.src.get_recommendations import get_recommended_documents
+from app.src.get_recommendations import get_recommended_documents, close_session
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -101,17 +101,17 @@ def add_document_sync():
   result = add_new_document_to_es(params, params.get('payload'))
   return json.dumps(result)
 
-  if __name__ == '__main__':
-    try:
-      app.run(host='0.0.0.0', port=1975, debug=True)
-    finally:
-      print ('Closing flask server')
-
-@app.route('/api/shutdown', methods=['POST'])
+@app.route('/api/shutdown', methods=['GET'])
 def shutdown():
   """Test API to close the TF session
   :return: success - result object with success message, 
             failure - result object with error message
   """
-  result = shutdown()
+  result = close_session()
   return json.dumps(result)
+
+if __name__ == '__main__':
+  try:
+    app.run(host='0.0.0.0', port=1975, debug=True)
+  finally:
+    print ('Closing flask server')
