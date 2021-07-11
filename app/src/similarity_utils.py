@@ -14,7 +14,7 @@ default_bootstrap_servers = ['localhost:9092']
 
 g_columns = ['id', 'title', 'publication', 'content']
 g_id_index = 0
-g_content_index = 1
+g_content_index = 3
 g_content_key = 'content'
 
 g_mapping = {

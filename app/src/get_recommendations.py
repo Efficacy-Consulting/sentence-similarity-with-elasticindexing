@@ -15,6 +15,10 @@ import numpy as np
 from elasticsearch import Elasticsearch
 from app.src.similarity_utils import *
 
+g_embedding = None
+g_sentences = None
+g_session = None
+
 def add_index_mapping(es, elasticindex_name):
   # make an API call to the Elasticsearch cluster
   # and have it return a response:
@@ -43,10 +47,10 @@ def get_recommended_documents(params, payload):
     }
     return result
 
-  content = payload.get('content')
-  if content is None:
+  search_string = payload.get('search_string')
+  if search_string is None:
       result = {
-        'error': 'Invalid argument - content'
+        'error': 'Invalid argument - search_string'
       }
       return result
 
@@ -60,25 +64,12 @@ def get_recommended_documents(params, payload):
     if not es.indices.exists(elasticindex_name):
         return "No records found"
 
-    start_time = time.time()
-    embed_func = hub.Module(use_model)
-    end_time = time.time()
-    print_with_time('Load the module: {}'.format(end_time-start_time))
-
-    start_time = time.time()
-    sentences = tf.compat.v1.placeholder(dtype=tf.string, shape=[None])
-    embedding = embed_func(sentences)
-    end_time = time.time()
-    print_with_time('Init sentences embedding: {}'.format(end_time-start_time))
-
+    [embedding, sentences, sess] = get_model_embedding(use_model)
     start_time = time.time()
     batch_sentences = []
-    batch_sentences.append(content)
-    with tf.compat.v1.Session() as sess:
-      sess.run([tf.compat.v1.global_variables_initializer(),
-                tf.compat.v1.tables_initializer()])
-      vector = sess.run(embedding, feed_dict={
-          sentences: batch_sentences})
+    batch_sentences.append(search_string)
+    vector = sess.run(embedding, feed_dict={
+        sentences: batch_sentences})
 
     query_vec = np.asarray(vector).tolist()
 
@@ -139,3 +130,30 @@ def get_recommended_documents(params, payload):
     }
 
   return result
+
+
+def get_model_embedding(use_model):
+  global g_embedding
+  global g_sentences
+  global g_session
+  if g_embedding is None or g_sentences is None:
+    start_time = time.time()
+    embed_func = hub.Module(use_model)
+    end_time = time.time()
+    print_with_time('Load the module: {}'.format(end_time-start_time))
+
+    start_time = time.time()
+    g_sentences = tf.compat.v1.placeholder(dtype=tf.string, shape=[None])
+    g_embedding = embed_func(g_sentences)
+    end_time = time.time()
+    print_with_time('Init sentences embedding: {}'.format(end_time-start_time))
+
+    # with tf.compat.v1.Session() as sess:
+    #   sess.run([tf.compat.v1.global_variables_initializer(),
+    #             tf.compat.v1.tables_initializer()])
+    g_session = tf.compat.v1.Session()
+    g_session.run([tf.compat.v1.global_variables_initializer(),
+                tf.compat.v1.tables_initializer()])
+
+  return [g_embedding, g_sentences, g_session]
+
