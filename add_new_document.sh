@@ -15,4 +15,4 @@ EOF
 curl -i \
 -H "Accept: application/json" \
 -H "Content-Type:application/json" \
--X POST --data "$(generate_new_document)" "http://127.0.0.1:1975/add-document"
+-X POST --data "$(generate_new_document)" "http://127.0.0.1:1975/api/add-document"
