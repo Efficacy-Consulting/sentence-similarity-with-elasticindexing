@@ -1,5 +1,5 @@
 # sentence-similarity-with-elasticindexing
-Short news articles lookup using Google's USE (Universal Sentence Encoder) and Elastic Indexing
+Short news articles lookup using Google's USE (Universal Sentence Encoder) and Elastic Indexing. Please follow the relevant medium article on [Document Recommendation](https://jaganlal.medium.com/document-recommendation-99e51cb3376e) that i wrote.
 
 ## Installation
 
